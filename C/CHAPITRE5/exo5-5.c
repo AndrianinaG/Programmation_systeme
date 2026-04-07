@@ -4,12 +4,10 @@
 #include <unistd.h>
 #include <time.h>
 
-/* Compteur global et mutex associé */
 int compt = 0;
 int limite = 0;
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
-/* Thread 1 : incrémente le compteur, attend entre 1 et 5 secondes */
 void *thread_incrementeur(void *arg) 
 {
     srand(time(NULL));
@@ -35,7 +33,6 @@ void *thread_incrementeur(void *arg)
     return NULL;
 }
 
-/* Thread 2 : affiche le compteur toutes les 2 secondes */
 void *thread_afficheur(void *arg) {
     while (1) {
         sleep(2);
