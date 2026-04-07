@@ -13,7 +13,6 @@ void *generer_tableau(void *arg)
     {
         tableau[i] = rand() % 100;
     }
-    // Retourner le tableau via pthread_exit
 
     pthread_exit((void *)tableau);
 }
@@ -30,14 +29,12 @@ int main() {
         return EXIT_FAILURE;
     }
 
-    // Récupérer le tableau retourné par le thread
     if (pthread_join(thread, (void **)&tableau_recu) != 0) 
     {
         fprintf(stderr, "Erreur : pthread_join échoué.\n");
         return EXIT_FAILURE;
     }
 
-    // Afficher le tableau dans le thread principal
     if (tableau_recu != NULL) 
     {
         printf("Tableau reçu du thread : [");
@@ -48,7 +45,6 @@ int main() {
         }
         printf("]\n");
 
-        // Libérer la mémoire allouée par le thread
         free(tableau_recu);
     }
 
