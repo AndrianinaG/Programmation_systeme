@@ -6,22 +6,16 @@
 
 #define N 100
 
-/* Tableau global et mutex associé */
 double tableau[N];
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
-/* ------------------------------------------------------------------ */
-/* Thread 1 : lissage par moyenne des voisins, en boucle infinie       */
-/* ------------------------------------------------------------------ */
 void *thread_lissage(void *arg) {
     while (1) {
-        /* On calcule les nouvelles valeurs dans un tableau temporaire
-           pour ne pas utiliser des valeurs déjà modifiées dans la même passe */
         double temp[N];
 
         pthread_mutex_lock(&mutex);
 
-        temp[0]    = tableau[0];      /* bornes fixes */
+        temp[0]    = tableau[0];      
         temp[N-1]  = tableau[N-1];
 
         int i;
@@ -37,7 +31,6 @@ void *thread_lissage(void *arg) {
 
         pthread_mutex_unlock(&mutex);
 
-        /* Attente aléatoire entre 1 et 3 secondes */
         int attente;
         if ((rand() % 3) == 0)
             attente = 1;
@@ -52,9 +45,6 @@ void *thread_lissage(void *arg) {
     return NULL;
 }
 
-/* ------------------------------------------------------------------ */
-/* Thread 2 : affichage du tableau toutes les 4 secondes              */
-/* ------------------------------------------------------------------ */
 void *thread_affichage(void *arg) {
     int passe = 0;
 
@@ -69,7 +59,6 @@ void *thread_affichage(void *arg) {
         int i;
         for (i = 0; i < N; i++) {
             printf("  tableau[%2d] = %7.3f", i, tableau[i]);
-            /* Retour à la ligne tous les 4 éléments pour la lisibilité */
             if ((i + 1) % 4 == 0)
                 printf("\n");
         }
@@ -81,19 +70,14 @@ void *thread_affichage(void *arg) {
     return NULL;
 }
 
-/* ------------------------------------------------------------------ */
-/* Main : initialisation + création des threads                        */
-/* ------------------------------------------------------------------ */
 int main(void) {
     srand((unsigned int)time(NULL));
 
-    /* Initialisation du tableau */
     tableau[0]   = 0.0;
     tableau[N-1] = 0.0;
 
     int i;
     for (i = 1; i <= N-2; i++) {
-        /* Valeur réelle aléatoire entre 0 et 100 */
         tableau[i] = (double)rand() / RAND_MAX * 100.0;
     }
 
